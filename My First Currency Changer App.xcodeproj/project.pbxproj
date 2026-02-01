@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		27C2DB612F2CEC3400205DD8 /* My First Currency Changer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My First Currency Changer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27C2DB612F2CEC3400205DD8 /* My First Currency Changer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "My First Currency Changer App.app"; path = "/Users/venna/Desktop/My First Currency Changer App/build/Debug-iphoneos/My First Currency Changer App.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				27C2DB632F2CEC3400205DD8 /* My First Currency Changer App */,
-				27C2DB622F2CEC3400205DD8 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		27C2DB622F2CEC3400205DD8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				27C2DB612F2CEC3400205DD8 /* My First Currency Changer App.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,7 +86,7 @@
 			mainGroup = 27C2DB582F2CEC3400205DD8;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 27C2DB622F2CEC3400205DD8 /* Products */;
+			productRefGroup = 27C2DB582F2CEC3400205DD8;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
