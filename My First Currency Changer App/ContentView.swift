@@ -8,138 +8,115 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var amount: Double = 1.0
-    @State private var usdRate: Double = 43.43
-    @State private var eurRate: Double = 51.66
-    @State private var cadRate: Double = 32.02
-    @State private var yenRate: Double = 03.56
-    @State private var rubRate: Double = 01.75
-    @State private var tryRate: Double = 1.00
+    @State private var isSheetShowing = false
+    @State private var amount: Decimal = 1.0
     
-    enum currencies: String {
-        case USD
-        case EUR
-        case TRY
-    }
+    @State private var baseAmountInUSD: Double = 1.00
+    @State private var selectedCurrency: String = "USD"
     
-    func convert(from amount: Double, to rate: Double) -> Double {
-        amount * rate
-    }
+    let exchangeRates: [String: Double] = [
+        "USD": 1.00,
+        "EUR": 0.84,
+        "GBP": 0.73,
+        "AUD": 1.44,
+        "CAD": 1.36,
+        "TRY": 43.36,
+        "RUB": 76.37,
+        "INR": 91.69,
+        
+    ]
+    
     var body: some View {
         VStack {
+            Text("Currencies")
+                .bold()
+                .font(.largeTitle)
             ScrollView {
                 VStack {
-                    HStack {
-                        Text("USD")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding(.leading, 10)
-                        Text("🇺🇸")
-                            .font(.largeTitle)
-                        Spacer()
-                        Text("\(convert(from: amount, to: usdRate), specifier: "%.2f")")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding()
+                    ForEach(exchangeRates.sorted(by: { $0.key < $1.key }), id: \.key) { currency, rate in
+                        HStack {
+                            Text(currency).bold()
+                            Spacer()
+                            Text(String(format: "%.2f", baseAmountInUSD * rate))
+                        }
+                        .padding()
                     }
-                    HStack {
-                        Text("EUR")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding(.leading, 10)
-                        Text("🇪🇺")
-                            .font(.largeTitle)
-                        Spacer()
-                        Spacer()
-                        Text("\(convert(from: amount, to: eurRate), specifier: "%.2f")")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding()
-                    }
-                    HStack {
-                        Text("CAD")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding(.leading, 10)
-                        Text("🇨🇦")
-                            .font(.largeTitle)
-                        Spacer()
-                        Spacer()
-                        Text("\(convert(from: amount, to: cadRate), specifier: "%.2f")")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding()
-                    }
-                    HStack {
-                        Text("YEN")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding(.leading, 10)
-                        Text("🇯🇵")
-                            .font(.largeTitle)
-                        Spacer()
-                        Spacer()
-                        Text("\(convert(from: amount, to: yenRate), specifier: "%.2f")")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding()
-                    }
-                    HStack {
-                        Text("RUB")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding(.leading, 10)
-                        Text("🇷🇺")
-                            .font(.largeTitle)
-                        Spacer()
-                        Spacer()
-                        Text("\(convert(from: amount, to: rubRate), specifier: "%.2f")")
-                            .font(.largeTitle)
-                            .bold()
-                            .padding()
-                    }
-                    
                 }
             }
             HStack {
-                TextField(
-                    "Miktar",
-                    value: $amount,
-                    formatter: NumberFormatter()
-                )
-                .keyboardType(.decimalPad)
-                .font(.largeTitle)
-                .padding(.leading, 5)
-                .bold()
-                .frame(width: 240, height: 50)
-                .background(
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(Color.gray, style: StrokeStyle(lineWidth: 1))
-                    
-                )
-                
+                    TextField(
+                        "✨",
+                        value: Binding(
+                            get: {
+                                baseAmountInUSD * (exchangeRates[selectedCurrency] ?? 1.0)
+                            },
+                            set: {
+                                newValue in
+                                let rate = exchangeRates[selectedCurrency] ?? 1.0
+                                baseAmountInUSD = newValue / rate
+                            }
+                        ),
+                        formatter: NumberFormatter()
+                    )
+                    .keyboardType(.decimalPad)
+                    .font(.largeTitle)
+                    .opacity(1)
+                    .padding(.leading, 15)
+                    .bold()
+                    .frame(width: 240, height: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(Color.gray, style: StrokeStyle(lineWidth: 1))
+                        
+                    )
                 .padding(.leading, 5)
                 
                 Button {
-                    
+                    isSheetShowing = true
                 } label: {
-                    Text("Hesapla")
-                        .font(.title3)
+                    Text(selectedCurrency)
+                        .font(.title2)
                         .bold()
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical)
-                            .background(
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical)
+                        .background(
                             RoundedRectangle(cornerRadius: 60)
                                 .fill(Color.blue))
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
                 }
                 .padding(.trailing, 4)
             }
             
         }
-    }
-}
+        .sheet(isPresented: $isSheetShowing) {
+            NavigationView {
+                List {
+                    ForEach(exchangeRates.keys.sorted(), id: \.self) { currencyName in
+                        Button {
+                            selectedCurrency = currencyName
+                            isSheetShowing = false
+                        } label: {
+                            HStack {
+                                Text(currencyName)
+                                    .bold()
+                                    .font(.headline)
+                                Spacer()
+                                if selectedCurrency == currencyName {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("Choose Currency")
+            }
+        }
+
+            }
+        }
+
 
 
 
