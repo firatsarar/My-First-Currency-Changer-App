@@ -1,3 +1,10 @@
+//
+//  ContentView.swift
+//  My First Currency Changer App
+//
+//  Created by Fırat Sarar on 30.01.2026.
+//
+
 import SwiftUI
 
 struct ContentView: View {
